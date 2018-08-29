@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: denisov
- * Date: 29.08.2018
- * Time: 0:59
- */
 
 namespace api\controllers;
 
@@ -15,6 +9,10 @@ use yii\rest\Controller;
 
 class SiteController extends Controller
 {
+    /**
+     * General info about API
+     * @return array
+     */
     public function actionIndex()
     {
         return [

@@ -1,23 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: denisov
- * Date: 29.08.2018
- * Time: 1:06
- */
 
 namespace api\models;
 
 use common\models\User;
 use yii\base\Model;
 /**
- * Login form
+ * Model for login via API
  */
 class Login extends Model
 {
+    /**
+     * @var
+     */
     public $email;
+
+    /**
+     * @var
+     */
     public $password;
 
+    /**
+     * @var
+     */
     private $_user;
     
     /**

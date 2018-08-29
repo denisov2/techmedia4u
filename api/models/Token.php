@@ -2,7 +2,6 @@
 
 namespace api\models;
 
-use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -26,6 +25,9 @@ class Token extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [

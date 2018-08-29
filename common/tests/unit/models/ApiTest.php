@@ -33,7 +33,6 @@ class ApiTest extends \Codeception\Test\Unit
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('get')
-            //->addHeaders([])
             ->setUrl($url)
             ->setData([])
             ->send();

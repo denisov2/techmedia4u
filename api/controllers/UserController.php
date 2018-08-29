@@ -1,37 +1,31 @@
 <?php
 
+
+
 namespace api\controllers;
 
 use api\models\Login;
 use api\models\Register;
 use Yii;
 use common\models\User;
-use backend\models\UserSearch;
-use yii\filters\AccessControl;
-use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 
+/**
+ * User registration and login via API
+ * Class UserController
+ * @package api\controllers
+ */
 class UserController extends ActiveController
 {
     public $modelClass = User::class;
 
-
+    /**
+     * @return array
+     */
     public function behaviors()
     {
-        /*
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator']['except'] = ['login', 'register'];
-        $behaviors['authenticator']['authMethods'] = [
-            HttpBearerAuth::className(),
-        ];
-        return $behaviors;
-        */
-
         return array_merge(parent::behaviors(), [
             'bearerAuth' => [
                 'class' => HttpBearerAuth::className(),
@@ -40,6 +34,9 @@ class UserController extends ActiveController
         ]);
     }
 
+    /**
+     * @return array
+     */
     public function verbs()
     {
         $parent = parent::verbs();
@@ -50,6 +47,9 @@ class UserController extends ActiveController
         ], $parent);
     }
 
+    /**
+     * @return array
+     */
     public function actions()
     {
         $actions = parent::actions();
@@ -57,6 +57,9 @@ class UserController extends ActiveController
         return $actions;
     }
 
+    /**
+     * @return Register|array|User|null
+     */
     public function actionRegister()
     {
         $model = new Register();
@@ -71,6 +74,9 @@ class UserController extends ActiveController
         return ['result' => 'fail', 'error_message' => 'No registration data', 'model' => $model];
     }
 
+    /**
+     * @return Login|\api\models\Token|null
+     */
     public function actionLogin()
     {
         $model = new Login();
@@ -91,7 +97,14 @@ class UserController extends ActiveController
         return \Yii::$app->user->identity;
     }
 
-
+    /**
+     * @param string $action
+     * @param null $model
+     * @param array $params
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function checkAccess($action, $model = null, $params = [])
     {
         if (in_array($action, ['update', 'delete'])) {
@@ -101,11 +114,6 @@ class UserController extends ActiveController
             if ($user->role != User::ROLE_ADMIN) {
                 throw new \yii\web\ForbiddenHttpException(sprintf('Action %s aviable only for admins', $action));
             }
-
-
-
         }
-
-        // throw new \yii\web\ForbiddenHttpException(sprintf('You can only %s articles that you\'ve created.', $action));
     }
 }

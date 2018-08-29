@@ -1,27 +1,24 @@
 <?php
 
+/**
+ API controller for messages send/recieve
+ */
+
+
 namespace api\controllers;
 
-use api\models\Login;
-use api\models\Register;
 use common\models\Message;
 use Yii;
 use common\models\User;
-use backend\models\UserSearch;
 use yii\base\Exception;
-use yii\filters\AccessControl;
-use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 
 class MessageController extends ActiveController
 {
     public $modelClass = Message::class;
-
 
     /**
      * @return array
@@ -161,6 +158,9 @@ class MessageController extends ActiveController
         return $model;
     }
 
+    /**
+     * @return array
+     */
     public function actions()
     {
         $actions = parent::actions();
@@ -173,6 +173,13 @@ class MessageController extends ActiveController
     }
 
 
+    /**
+     * Checking additional access for some actions
+     * @param string $action
+     * @param null $model
+     * @param array $params
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function checkAccess($action, $model = null, $params = [])
     {
         if ($action == 'delete') {
