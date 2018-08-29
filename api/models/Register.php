@@ -51,6 +51,9 @@ class Register extends Model
         if (!$this->validate()) {
             return null;
         }
+
+
+
         $user = new User();
         $user->status = User::STATUS_ACTIVE;
         $user->role = User::ROLE_USER;
@@ -58,6 +61,13 @@ class Register extends Model
         $user->phone_number = $this->phone_number;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-        return $user->save() ? $user : null;
+
+        if($user->save()) {
+            return $user;
+        } else {
+            return null;
+        }
+
+        
     }
 }
