@@ -13,6 +13,15 @@ RewriteCond %{REQUEST_URI} !^/backend/web/(assets|css)/
 RewriteCond %{REQUEST_URI} ^/(admin)
 RewriteRule ^.*$ backend/web/index.php [L]
 
+# deal with api
+RewriteCond %{REQUEST_URI} ^/(api)
+RewriteRule ^api/assets/(.*)$ api/web/assets/$1 [L]
+RewriteRule ^api/css/(.*)$ api/web/css/$1 [L]
+
+RewriteCond %{REQUEST_URI} !^/api/web/(assets|css)/
+RewriteCond %{REQUEST_URI} ^/(api)
+RewriteRule ^.*$ api/web/index.php [L]
+
 
 RewriteCond %{REQUEST_URI} ^/
 RewriteRule ^(\/?.*)$ frontend/web/$1 [L]
