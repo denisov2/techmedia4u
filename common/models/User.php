@@ -242,6 +242,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [];
     }
     /**
+     * Check if token is not expired.
      * Logins user by given JWT encoded string. If string is correctly decoded
      * - array (token) must contain 'jti' param - the id of existing user
      * @param  string $accessToken access token to decode
@@ -250,6 +251,16 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        // first Check if token is not expired
+        $tokenModel = Token::find()
+            ->where(['token' => $token])
+            ->andWhere(['>', 'expired_at', time()])
+            ->one();
+
+        if(empty($tokenModel)) {
+            return false;
+        }
+
         $secret = static::getSecretKey();
         // Decode token and transform it into array.
         // Firebase\JWT\JWT throws exception if token can not be decoded
@@ -258,11 +269,14 @@ class User extends ActiveRecord implements IdentityInterface
         } catch (\Exception $e) {
             return false;
         }
+
+
         static::$decodedToken = (array) $decoded;
         // If there's no jti param - exception
         if (!isset(static::$decodedToken['jti'])) {
             return false;
         }
+
         // JTI is unique identifier of user.
         // For more details: https://tools.ietf.org/html/rfc7519#section-4.1.7
         $id = static::$decodedToken['jti'];
@@ -302,7 +316,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getJWT()
     {
-        // Collect all the data
         $secret      = static::getSecretKey();
         $currentTime = time();
         $request     = Yii::$app->request;
