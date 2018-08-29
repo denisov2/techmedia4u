@@ -25,8 +25,8 @@ class ApiTest extends \Codeception\Test\Unit
     const API_ENDPOINT = 'http://techmedia4u.local/api';
 
 
-
-    public function testApiInfo() {
+    public function testApiInfo()
+    {
 
         $url = self::API_ENDPOINT;
 
@@ -38,11 +38,47 @@ class ApiTest extends \Codeception\Test\Unit
             ->setData([])
             ->send();
 
-        expect('Api info should not be empty' , $response->data)->notEmpty();
+        expect('Api info should not be empty', $response->data)->notEmpty();
 
     }
 
+    public function testApiRegisterAndLogin()
+    {
+        $url = self::API_ENDPOINT . '/user/register';
 
+        $email = time().'test@example.com';
+        $password = 'zf7sefj87w8aqdw';
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('post')
+            //->addHeaders([])
+            ->setUrl($url)
+            ->setData([
+                'email' => $email,
+                'password' => $password,
+                'phone_number' => '380503562767'
+            ])
+            ->send();
+
+        expect('Api info should not be empty', $response->data['id'])->notEmpty();
+
+        $url = self::API_ENDPOINT . '/user/login';
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('post')
+            //->addHeaders([])
+            ->setUrl($url)
+            ->setData([
+                'email' => $email,
+                'password' => $password,
+            ])
+            ->send();
+
+        expect('Api info should not be empty', $response->data['token'])->notEmpty();
+
+    }
 
 
 }
